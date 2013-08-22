@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+#DH_VERBOSE=1
+
+#MAKE_OPTIONS=\
+#             INCLUDES="-I/usr/include/vdr -I/usr/include/ImageMagick" 
+
+.PHONY: override_dh_auto_install
+
+#override_dh_auto_build:
+#	dh_auto_build -- all $(MAKE_OPTIONS)
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/vdr-plugin-skinmetrixhd
+
+%:
+	dh $@
+

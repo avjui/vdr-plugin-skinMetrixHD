@@ -1,0 +1,24 @@
+Source: vdr-plugin-skinmetrixhd
+Section: video
+Priority: extra
+Maintainer: Holger Schvestka <hotzenplotz5@gmx.de>
+Uploader: Holger Schvestka <hotzenplotz5@gmx.de>
+Build-Depends: debhelper (>= 8), vdr-dev (>= 1.7.28), libmagick++-dev, gettext
+Standards-Version: 3.9.3
+Homepage: http://www.vdr-portal.de/board1-news/board2-vdr-news/115810-announce-skin-nopacity/
+
+Package: vdr-plugin-skinmetrixhd
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${vdr:Depends}
+Description: Skin plugin for VDR
+ "vdr-plugin-skinnopacity" is a standalone skin.
+
+Package: vdr-plugin-skinmetrixhd-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: vdr-plugin-avahi4vdr (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for vdr-plugin-skinnopacity
+ .
+ This package contains only the debugging symbols for vdr-plugin-skinnopacity
+
