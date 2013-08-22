@@ -1,10 +1,12 @@
 This is a "plugin" for the Video Disk Recorder (VDR).
 
-Written by:                  Martin Schirrmacher <vdr.skinmetrixhd@schirrmacher.eu>
+Written by:                  Juen Rene <jren6774@gmail.com>
 Based on:                    skin-nOpacity from Louis Braun
                              http://projects.vdr-developer.org/projects/skin-nopacity/
-
-Project's homepage:          http://projects.vdr-developer.org/projects/plg-skinmetrixhd/
+                             and skinflat from Martin Schirrmacher
+                             http://projects.vdr-developer.org/projects/plg-skinflat/
+                             and MetrixHD skin
+Project's homepage:          https://github.com/avjui/vdr-plugin-skinMetrixHD/
 
 
 This program is free software; you can redistribute it and/or modify
@@ -16,13 +18,13 @@ See the file COPYING for more information.
 Requirements
 ------------
 
-- VDR version >= 1.7.34
+- VDR version >= 1.7.36
 
 - Installed ImageMagick for displaying png/jpg Icons, Channel Logos and EPG Images
 
 Description
 -----------
-skinmetrixhd ist ein einfacher und schlanker Skin für VDR.
+skinmetrixhd ist ein Skin fï¿½r VDR.
 
 Installation 
 ------------
@@ -30,18 +32,18 @@ Installation wie bei allen VDR Plugins.
     make
     make install
 
-Für die Kanallogos empfehle ich die Logos von 3PO Repo (https://github.com/3PO/Senderlogos).
-Diese können mit folgendem Befehl heruntergeladen werden:
+Fï¿½r die Kanallogos empfehle ich die Logos von 3PO Repo (https://github.com/3PO/Senderlogos).
+Diese kï¿½nnen mit folgendem Befehl heruntergeladen werden:
     git clone https://github.com/3PO/Senderlogos.git logos
-Die Logos müssen im folgenden Ordner zur Verfügung gestellt werden:
+Die Logos mï¿½ssen im folgenden Ordner zur Verfï¿½gung gestellt werden:
     <vdrconfigdir>/plugins/skinmetrixhd/logos/
 
-Der Skin muss im Menü unter Einstellungen -> OSD ausgewählt werden.
+Der Skin muss im Menï¿½ unter Einstellungen -> OSD ausgewï¿½hlt werden.
 
 
 Themes and theme specific Icons
 -------------------------------
-Der Skin ist weitestgehend über Themes anpassbar.
-Für die einfache Erstellung eines Themes existiert im Quellcode-Verzeichnis folgendes script:
+Der Skin ist weitestgehend ï¿½ber Themes anpassbar.
+Fï¿½r die einfache Erstellung eines Themes existiert im Quellcode-Verzeichnis folgendes script:
     generate_theme.sh
 Damit kann einfach ein neues Theme erstellt werden.
