@@ -29,7 +29,7 @@ cMetrixHDDisplayChannel::cMetrixHDDisplayChannel(bool WithInfo) {
         Theme.Color(clrChannelProgressFg), Theme.Color(clrChannelProgressBarFg), Theme.Color(clrChannelProgressBg));
 
     //height += heightTop;
-    chanInfoTopPixmap = osd->CreatePixmap(1, cRect(0, 0 , osdWidth / 2, fontdoubleHeight));
+    chanInfoTopPixmap = osd->CreatePixmap(1, cRect(marginOsd, marginOsd , osdWidth / 2, fontdoubleHeight));
 
     //Signal Bar
     SignalPixmap = osd->CreatePixmap(1, cRect((osdWidth / 3) / 2 , osdHeight - (heightBottom + fontHeight + 5), (osdWidth / 3) * 2, fontHeight));

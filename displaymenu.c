@@ -1,4 +1,5 @@
 #include "displaymenu.h"
+#include "services/tvscraper.h"
 
 cMetrixHDDisplayMenu::cMetrixHDDisplayMenu() {
     cString IconName = "";
@@ -18,10 +19,10 @@ cMetrixHDDisplayMenu::cMetrixHDDisplayMenu() {
     scrollBarHeight = osdHeight - (topBarHeight + buttonsHeight + marginItem*2 + margintop);
     scrollBarTop = topBarHeight + marginItem;
 
-    menuWidth = (osdWidth / 3) * 2 - scrollBarWidth - 20 - marginleft;
+    menuWidth = (osdWidth / 3) * 2 - scrollBarWidth - 20;
     menuWidthFg = (osdWidth / 3) * 2 - scrollBarWidth - 20;
 
-    menuPixmap = osd->CreatePixmap(1, cRect(osdWidth / 3 + 20, margintop , menuWidth, scrollBarHeight ));
+    menuPixmap = osd->CreatePixmap(1, cRect(osdWidth / 3 + 20 - marginleft, margintop , menuWidth, scrollBarHeight ));
     clear = false;
     iconmenuPixmap = osd->CreatePixmap(2, cRect(marginleft, margintop, imageheight , imageheight));
     logomenuPixmap = osd->CreatePixmap(2, cRect(marginleft + sitebarwidth / 2 - 100, margintop, 200, 200));
@@ -195,9 +196,9 @@ bool cMetrixHDDisplayMenu::SetItemEvent(const cEvent *Event, int Index, bool Cur
         // Variables
         ColorFg = Theme.Color(clrItemCurrentFont);
         ColorBg = Theme.Color(clrTopGreen);
-        x = 0;
+        //x = 0;
         clear = true;
-        menuEventWidth = menuWidthFg;
+        //menuEventWidth = menuWidthFg;
         time_t s = time(NULL);
         current = s - Event->StartTime();
         total = Event->Duration();
@@ -490,7 +491,7 @@ void cMetrixHDDisplayMenu::CreateSmallSiteBar(void) {
     bool small = true;
     if (siteBarPixmap)
         osd->DestroyPixmap(siteBarPixmap);
-    siteBarPixmap = osd->CreatePixmap(1, cRect(marginleft, margintop , imageheight, imageheight));
+    siteBarPixmap = osd->CreatePixmap(1, cRect(marginleft, margintop , imageheight, imageheight + marginleft));
     siteBarPixmap->Fill(Theme.Color(clrMenuBg));
     TimeBareLeftCreate(small);
 }

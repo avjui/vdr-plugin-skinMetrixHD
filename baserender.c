@@ -88,8 +88,6 @@ void cMetrixHDBaseRender::CreateOsd(int left, int top, int width, int height) {
 }
 
 void cMetrixHDBaseRender::TopBarCreate(int topbarheight, int topbarweight) {
-    int marginleft = (osdWidth * 0.1) / 2;  
-    int margintop = (osdHeight * 0.1) / 2;
     if (topbarheight == 0) {
         topbarheight = datewidth + timewidth + 75;
     }
@@ -97,8 +95,8 @@ void cMetrixHDBaseRender::TopBarCreate(int topbarheight, int topbarweight) {
         topbarweight = fontdoubleHeight;
     }
 
-    topbarheightx1 = osdWidth - (datewidth + timewidth + 75) - marginleft;
-    topbarweighty1 = margintop;
+    topbarheightx1 = osdWidth - (datewidth + timewidth + 75) - marginOsd;
+    topbarweighty1 = marginOsd;
 
     BarPixmap = osd->CreatePixmap(1, cRect(topbarheightx1, topbarweighty1, topbarheight, topbarweight));
     BarPixmap->Fill(clrTransparent);
@@ -109,13 +107,14 @@ void cMetrixHDBaseRender::TopBarCreate(int topbarheight, int topbarweight) {
 
 void cMetrixHDBaseRender::TimeBareLeftCreate(bool small) {
     int marginleft = (osdWidth * 0.1) / 2;
-    int margintop = (osdHeight * 0.1) / 2;
+    int margintop = (osdHeight * 0.1);
+
     if( BarPixmap )
           osd->DestroyPixmap(BarPixmap);
     if (small){
-         BarPixmap = osd->CreatePixmap(1, cRect(marginleft, osdWidth / 100 * 21 + 20 + marginleft , osdWidth / 100 * 21, fontdoubleHeight));
+         BarPixmap = osd->CreatePixmap(1, cRect(marginleft, osdWidth / 100 * 21 + 20 + margintop * 2 , osdWidth / 100 * 21, fontdoubleHeight));
     } else {
-         BarPixmap = osd->CreatePixmap(1, cRect(marginleft, osdHeight - fontdoubleHeight - margintop , (osdWidth / 3) - marginleft * 2 - marginItem, fontdoubleHeight));
+         BarPixmap = osd->CreatePixmap(1, cRect(marginleft, osdHeight - fontdoubleHeight - margintop / 2, (osdWidth / 3) - marginleft * 2 - marginItem, fontdoubleHeight));
     }
     //BarPixmap->Fill(clrTransparent);
 }
@@ -150,8 +149,7 @@ void cMetrixHDBaseRender::ButtonsCreate(void) {
 }
 
 void cMetrixHDBaseRender::ButtonsSet(const char *Red, const char *Green, const char *Yellow, const char *Blue) {
-    int marginleft = (osdWidth * 0.1) / 2;
-    int buttonWidth = (osdWidth / 3 * 2 - 20 -marginleft) / 4 - marginItem;
+    int buttonWidth = (osdWidth / 3 * 2 - 20) / 4 - marginItem;
 
     buttonsPixmap->Fill(clrTransparent);
 
