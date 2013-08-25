@@ -88,6 +88,9 @@ void cMetrixHDBaseRender::CreateOsd(int left, int top, int width, int height) {
 }
 
 void cMetrixHDBaseRender::TopBarCreate(int topbarheight, int topbarweight) {
+    int marginleft = (osdWidth * 0.1) / 2;
+    int margintop = (osdHeight * 0.1) / 2;
+
     if (topbarheight == 0) {
         topbarheight = datewidth + timewidth + 75;
     }
@@ -95,8 +98,8 @@ void cMetrixHDBaseRender::TopBarCreate(int topbarheight, int topbarweight) {
         topbarweight = fontdoubleHeight;
     }
 
-    topbarheightx1 = osdWidth - (datewidth + timewidth + 75) - marginOsd;
-    topbarweighty1 = marginOsd;
+    topbarheightx1 = osdWidth - (datewidth + timewidth + 75) - marginleft;
+    topbarweighty1 = margintop;
 
     BarPixmap = osd->CreatePixmap(1, cRect(topbarheightx1, topbarweighty1, topbarheight, topbarweight));
     BarPixmap->Fill(clrTransparent);
@@ -149,11 +152,11 @@ void cMetrixHDBaseRender::ButtonsCreate(void) {
 }
 
 void cMetrixHDBaseRender::ButtonsSet(const char *Red, const char *Green, const char *Yellow, const char *Blue) {
-    int buttonWidth = (osdWidth / 3 * 2 - 20) / 4 - marginItem;
+    int buttonWidth = (osdWidth / 3 * 2 - 20 - (osdWidth * 0.1 / 2)) / 4 - marginItem;
 
     buttonsPixmap->Fill(clrTransparent);
 
-    int x = osdWidth / 3 + 20;
+    int x = osdWidth / 3;
     buttonsPixmap->DrawText(cPoint(x, 0), Red, Theme.Color(clrButtonFont), Theme.Color(clrButtonBg), font, buttonWidth, buttonsHeight, taCenter);
     buttonsPixmap->DrawRectangle(cRect(x, 0, 15, buttonsHeight), Theme.Color(clrButtonRed));
 

@@ -12,6 +12,8 @@ cMetrixHDDisplayChannel::cMetrixHDDisplayChannel(bool WithInfo) {
     TopBarCreate();
     MessageCreate();
 
+    marginleft = osdWidth * 0.1 / 2;
+    margintop = osdHeight *0.1 / 2;
     // von unten noch oben
     // 2 * EPG + 2 * EPGsml
     heightBottom = fontBigHeight + fontHeight + (fontSmlHeight * 3) + ProgressBarHeight(); // Top, Buttom, Between
@@ -29,7 +31,7 @@ cMetrixHDDisplayChannel::cMetrixHDDisplayChannel(bool WithInfo) {
         Theme.Color(clrChannelProgressFg), Theme.Color(clrChannelProgressBarFg), Theme.Color(clrChannelProgressBg));
 
     //height += heightTop;
-    chanInfoTopPixmap = osd->CreatePixmap(1, cRect(marginOsd, marginOsd , osdWidth / 2, fontdoubleHeight));
+    chanInfoTopPixmap = osd->CreatePixmap(1, cRect(marginleft, margintop, osdWidth / 2 - marginleft, fontdoubleHeight));
 
     //Signal Bar
     SignalPixmap = osd->CreatePixmap(1, cRect((osdWidth / 3) / 2 , osdHeight - (heightBottom + fontHeight + 5), (osdWidth / 3) * 2, fontHeight));
@@ -80,11 +82,14 @@ void cMetrixHDDisplayChannel::SetChannel(const cChannel *Channel, int Number) {
 
 
         const cSource *source = Sources.Get(Channel->Source());
-        if (source)
-             channelFrequency = cString::sprintf("%d Mhz %s / %s - %s", Frequency, *Polarization, *Ebene , *cSource::ToString(source->Code()));        
-        else
-             channelFrequency = cString::sprintf("%d Mhz %s / %s", Frequency, *Polarization, *Ebene);
-
+        if(Channel->IsSat()) {
+           if (source)
+               channelFrequency = cString::sprintf("%d Mhz %s / %s - %s", Frequency, *Polarization, *Ebene , *cSource::ToString(source->Code()));        
+           else
+               channelFrequency = cString::sprintf("%d Mhz %s / %s", Frequency, *Polarization, *Ebene);
+        } else {
+               channelFrequency = cString::sprintf(" %d Khz DVB-C", Frequency);
+        }
               
         if (!Channel->GroupSep())
             channelNumber = cString::sprintf("%d%s", Channel->Number(), Number ? "-" : "");

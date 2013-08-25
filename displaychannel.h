@@ -14,6 +14,8 @@ class cMetrixHDDisplayChannel : public cMetrixHDBaseRender, public cSkinDisplayC
         cPixmap *chanInfoLogo;
         cPixmap *SignalPixmap;
         int heightBottom;
+        int marginleft;
+        int margintop;
         int left;
         int lastSignalStrength;
         int SignalStrength;

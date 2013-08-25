@@ -4,7 +4,8 @@ cMetrixHDDisplayVolume::cMetrixHDDisplayVolume(void) {
     muted = false;
 
     labelHeight = fontHeight * 2;
-
+    osdWidth = cOsd::OsdWidth();
+    
     CreateFullOsd();
     
     labelPixmap = osd->CreatePixmap(1, cRect(0, 0, osdWidth, fontBigHeight));

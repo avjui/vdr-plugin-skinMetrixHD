@@ -1,5 +1,5 @@
 #include "displaymenu.h"
-#include "services/tvscraper.h"
+//#include "services/tvscraper.h"
 
 cMetrixHDDisplayMenu::cMetrixHDDisplayMenu() {
     cString IconName = "";
@@ -84,11 +84,19 @@ void cMetrixHDDisplayMenu::Scroll(bool Up, bool Page) {
 }
 
 int cMetrixHDDisplayMenu::MaxItems(void) {
-    return scrollBarHeight / itemHeight;
+    if(MenuCategory() == mcSchedule || MenuCategory() == mcScheduleNext || MenuCategory() == mcScheduleNow){
+         return scrollBarHeight / (itemHeight + fontSmlHeight);
+    } else {
+         return scrollBarHeight / itemHeight;
+    }
 }
 
 int cMetrixHDDisplayMenu::ItemsHeight(void) {
-    return MaxItems() * itemHeight;
+    if(MenuCategory() == mcSchedule || MenuCategory() == mcScheduleNext || MenuCategory() == mcScheduleNow){
+         return  MaxItems() * (itemHeight + fontSmlHeight);
+    } else {
+         return MaxItems() * itemHeight;
+    }
 }
 void cMetrixHDDisplayMenu::Clear(void) {
     textScroller.Reset();
@@ -151,37 +159,44 @@ void cMetrixHDDisplayMenu::SetItem(const char *Text, int Index, bool Current, bo
 }
 
 bool cMetrixHDDisplayMenu::SetItemEvent(const cEvent *Event, int Index, bool Current, bool Selectable, const cChannel *Channel, bool WithDate, eTimerMatch TimerMatch) {
+
+    if(!Event && !Channel)
+       return false;
     int current = 0;
     int total = 0;
-    int menuEventWidth = menuWidth;
+    cString title = "";
+    cString timeinfo = "";
+    cString eventdate = "";
+    cString event = "";
 
-    if(!Event)
-       return false;
+    if (Channel)
+       event = cString::sprintf(" ----------- %s -----------", Channel->Name());
+    
 
     // Inital some things    
     ClearSiteBar();
     CreateSiteBar();
     ContentCreate(marginleft / 2, margintop + fontSmlHeight * 2 + 200, marginleft + sitebarwidth, osdHeight - fontHeight * 2 - fontSmlHeight *2 - 210 - margintop * 2);
 
-    cString title = Event->Title();
-    cString description = Event->ShortText();
+    if(Event) {
+       cString title = Event->Title();
+       cString description = Event->ShortText();
 
-    // Datum kürzen
-    cString date = Event->GetDateString();
-    std::string dateshort = *date;
-    date = dateshort.substr(0,6).c_str();
+       // Datum kürzen
+       cString date = Event->GetDateString();
+       std::string dateshort = *date;
+       date = dateshort.substr(0,6).c_str();
 
-    cString startTime = Event->GetTimeString();
-    cString endTime = Event->GetEndTimeString();
+       cString startTime = Event->GetTimeString();
+       cString endTime = Event->GetEndTimeString();
 
-    cString event = cString::sprintf("%s %s - %s", *date, *startTime, *title);
-    cString timeinfo = cString::sprintf("%s - %s",*startTime, *endTime);
-    int timewidth = font->Width(*timeinfo);
-
+       event = cString::sprintf("%s", *title);
+       eventdate = cString::sprintf("%s - %s", *date, *startTime);
+       timeinfo = cString::sprintf("%s - %s",*startTime, *endTime);
+       int timewidth = font->Width(*timeinfo);
+    }
     //to clear the menu
     //menuPixmap->Fill(clrTransparent);
-    if(clear)
-        menuPixmap->DrawRectangle(cRect(0, 0, marginleft / 2, scrollBarHeight), clrTransparent);
     siteBarPixmap->Fill(Theme.Color(clrTopBarBg));
 
     if(Channel) {
@@ -190,23 +205,19 @@ bool cMetrixHDDisplayMenu::SetItemEvent(const cEvent *Event, int Index, bool Cur
            logomenuPixmap->DrawImage( cPoint(0, 0), imgLoader.GetImage() );
         }
       }
-    int y = Index * itemHeight;
+    int y = Index * (itemHeight + fontSmlHeight);
     int x = marginleft / 2;
     if (Current) {
-        // Variables
         ColorFg = Theme.Color(clrItemCurrentFont);
         ColorBg = Theme.Color(clrTopGreen);
-        //x = 0;
         clear = true;
-        //menuEventWidth = menuWidthFg;
         time_t s = time(NULL);
         current = s - Event->StartTime();
         total = Event->Duration();
  
        //Description left
-        siteBarPixmap->DrawText(cPoint((sitebarwidth - timewidth) / 2, 225), timeinfo, ColorFg, clrTransparent, font, menuWidth);
+        siteBarPixmap->DrawText(cPoint((sitebarwidth - timewidth) / 2, 200), timeinfo, ColorFg, clrTransparent, font, menuWidth);
         ProgressBarDraw(current, total);
-        //if(MenuCategory() == mcScheduleNow || MenuCategory() == mcScheduleNext) {
         cString content = Event->Description();
         if(*content == NULL)
             content = Event->ShortText();
@@ -219,12 +230,13 @@ bool cMetrixHDDisplayMenu::SetItemEvent(const cEvent *Event, int Index, bool Cur
         } else {
             ColorFg = Theme.Color(clrItemFont);
             ColorBg = Theme.Color(clrTransparent);
+            eventdate = "";
         }
     }
-    
     for (int i = 0; i < MaxTabs; i++)
     {             
-            menuPixmap->DrawText(cPoint(x, y), event, ColorFg, ColorBg, font, menuEventWidth);
+            menuPixmap->DrawText(cPoint(x, y), event, ColorFg, ColorBg, font, menuWidth, fontHeight + fontSmlHeight);
+            menuPixmap->DrawText(cPoint(x, y + fontHeight), eventdate, ColorFg, ColorBg, fontSml, menuWidth);
             
         if (!Tab(i + 1))
             break;
@@ -279,7 +291,7 @@ bool cMetrixHDDisplayMenu::SetItemChannel(const cChannel *Channel, int Index, bo
     CreateSiteBar();
     cString channel = cString::sprintf(" %d   %s",Channel->Number(), Channel->Name());
     if(Channel->GroupSep())
-        channel = cString::sprintf("--------- %s ---------", Channel->Name());
+        channel = cString::sprintf(" --------- %s ---------", Channel->Name());
 
     if(Channel && Current) {
         if( imgLoader.LoadLogo(Channel->Name(), 400, 400) ) {
@@ -344,6 +356,7 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
 
     ClearSiteBar();
     CreateSiteBar();
+    DrawPoster(Recording);
     siteBarPixmap->Fill(Theme.Color(clrTransparent));
 
     const cRecordingInfo *recInfo = Recording->Info();
@@ -354,7 +367,7 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
     cString title = Recording->Name();
     cString shortText = recInfo->ShortText();
     cString path = Recording->FileName();
-    dsyslog("SkinMetrixHD: Path of recording %s", *path);
+    dsyslog("SkinMetrixHD: %s %s", tr("Path of recording"), *path);
     if (Current) {
         ColorFg = Theme.Color(clrItemCurrentFont);
         ColorBg = Theme.Color(clrTopGreen); 
@@ -385,6 +398,24 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
     }
 
       return true;
+}
+
+void cMetrixHDDisplayMenu::DrawPoster(const cRecording *Recording) {
+   const cRecordingInfo *info = Recording->Info();
+   if (info) {
+      const cEvent *event = info->GetEvent();
+      static cPlugin *pTVScraper = cPluginManager::GetPlugin("tvscraper");
+      if (pTVScraper && event) {
+          poster.event = event;
+          poster.isRecording = true;
+          if (pTVScraper->Service("TVScraperGetPoster", &poster)) {
+                int posterHeightOrig = poster.media.height;
+                int posterWidthOrig = poster.media.width;
+                cString path = poster.media.path.c_str();
+                dsyslog("SkinMetrixHD : Poster Found %s ", *path);          
+          }
+      }
+   }
 }
 
 void cMetrixHDDisplayMenu::SetText(const char *Text, bool FixedFont) {

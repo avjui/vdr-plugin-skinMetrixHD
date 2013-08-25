@@ -1,7 +1,7 @@
 #pragma once
 
 #include "baserender.h"
-
+#include "services/tvscraper.h"
 
 class cMetrixHDDisplayMenu : public cMetrixHDBaseRender,  public cSkinDisplayMenu {
     private:
@@ -34,6 +34,8 @@ class cMetrixHDDisplayMenu : public cMetrixHDBaseRender,  public cSkinDisplayMen
         void CreateSmallSiteBar(void);
         void CreateSiteBar(void);
         void ClearSiteBar(void);
+        void DrawPoster(const cRecording *Recording);
+        TVScraperGetPoster poster;
     public:
         cMetrixHDDisplayMenu();
         virtual ~cMetrixHDDisplayMenu();

@@ -58,7 +58,7 @@ THEME_CLR(Theme, clrItemCurrentFont,        0xFFEEEEEE);
 THEME_CLR(Theme, clrItemSelableBg,          0xBB101010);
 THEME_CLR(Theme, clrItemSelableFont,        0xFFEEEEEE);
 THEME_CLR(Theme, clrScrollbarFg,            0xFFEEEEEE);
-THEME_CLR(Theme, clrScrollbarBarFg,         0xFFEEEEEE);
+THEME_CLR(Theme, clrScrollbarBarFg,         0xFF63EA42);
 THEME_CLR(Theme, clrScrollbarBg,            0xBB101010);
 // Menu Channel
 THEME_CLR(Theme, clrMenuChannelContentBg,   0xFF63EA42);
