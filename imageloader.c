@@ -44,6 +44,20 @@ bool cImageLoader::LoadLogo(const char *logo, int width=-1, int height=-1) {
     return true;
 }
 
+bool cImageLoader::LoadPoster(const char *logo, int width, int height) {
+    std::string logoLower = logo;
+    toLowerCase(logoLower);
+    bool success = false;
+    success = LoadPosterImage(logoLower.c_str());
+    if( !success ) {
+        return false;
+    }
+    if( height != 0 || width != 0 ) {
+        buffer.sample( Geometry(width, height) );
+    }
+    return true;
+}
+
 int cImageLoader::Height(void) {
     Geometry geo = buffer.size();
     return geo.height();
@@ -251,6 +265,20 @@ void cImageLoader::toLowerCase(std::string &str) {
 bool cImageLoader::LoadImage(cString FileName, cString Path, cString Extension) {
     try {
         cString File = cString::sprintf("%s%s.%s", *Path, *FileName, *Extension);
+        dsyslog("imageloader: trying to load: %s", *File);
+        //printf("imageloader: trying to load: %s\n", *File);
+        buffer.read(*File);
+        dsyslog("imageloader: %s sucessfully loaded", *File);
+        //printf("imageloader: %s sucessfully loaded\n", *File);
+    } catch (...) {     
+        return false;
+    }
+    return true;
+}
+
+bool cImageLoader::LoadPosterImage(cString FileName) {
+    try {
+        cString File = cString::sprintf("%s",*FileName);
         dsyslog("imageloader: trying to load: %s", *File);
         //printf("imageloader: trying to load: %s\n", *File);
         buffer.read(*File);

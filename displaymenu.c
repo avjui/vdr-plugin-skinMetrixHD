@@ -11,7 +11,7 @@ cMetrixHDDisplayMenu::cMetrixHDDisplayMenu() {
 
     marginleft = (osdWidth * 0.1) / 2;
     margintop = (osdHeight * 0.1) / 2;
-    imageheight = osdWidth / 100 * 21;
+    imageheight = osdWidth / 100 * 40;
     sitebarwidth = osdWidth / 3 - 10 - marginleft * 2;
  
     siteBarPixmap = NULL;
@@ -293,16 +293,16 @@ bool cMetrixHDDisplayMenu::SetItemChannel(const cChannel *Channel, int Index, bo
     if(Channel->GroupSep())
         channel = cString::sprintf(" --------- %s ---------", Channel->Name());
 
-    if(Channel && Current) {
-        if( imgLoader.LoadLogo(Channel->Name(), 400, 400) ) {
-           iconmenuPixmap->DrawImage( cPoint(0, 0), imgLoader.GetImage() );
-        }
-      }
 
     if (Current) {
         ColorFg = Theme.Color(clrItemCurrentFont);
         ColorBg = Theme.Color(clrTopGreen); 
-    } else {
+        if(Channel) {
+           if( imgLoader.LoadLogo(Channel->Name(), 400, 400) ) {
+               iconmenuPixmap->DrawImage( cPoint(0, 0), imgLoader.GetImage() );
+           }
+        }
+     } else {
         if( Selectable ) {
             cString channel = cString::sprintf("%d   %s",Channel->Number(), Channel->Name());
             ColorFg = Theme.Color(clrItemSelableFont);
@@ -356,21 +356,19 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
 
     ClearSiteBar();
     CreateSiteBar();
-    DrawPoster(Recording);
     siteBarPixmap->Fill(Theme.Color(clrTransparent));
 
     const cRecordingInfo *recInfo = Recording->Info();
     cString timeString = cString::sprintf("%s  %s - %s", *DateString(Recording->Start()), *TimeString(Recording->Start()), recInfo->ChannelName() ? recInfo->ChannelName() : "");
 
-    //cString title = recInfo->Title();
-    //if( isempty(title) )
     cString title = Recording->Name();
     cString shortText = recInfo->ShortText();
-    cString path = Recording->FileName();
-    dsyslog("SkinMetrixHD: %s %s", tr("Path of recording"), *path);
+
     if (Current) {
         ColorFg = Theme.Color(clrItemCurrentFont);
         ColorBg = Theme.Color(clrTopGreen); 
+        cString posterpath = DrawPoster(Recording);
+        dsyslog("SkinMetrixHD : Path Found %s ", *posterpath);
     } else {
         if( Selectable ) {
             ColorFg = Theme.Color(clrItemSelableFont);
@@ -385,13 +383,9 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
     {
       if( Total > 0) {
         menuPixmap->DrawText(cPoint(0, y), title, ColorFg, ColorBg, font, menuWidth);
-        if( imgLoader.LoadIcon("folder", 400, 400) ) {
-           iconmenuPixmap->DrawImage( cPoint(0, 0), imgLoader.GetImage() );
-        }
       } else {
-           title = cString::sprintf("%s  %s  %s", *DateString(Recording->Start()), *TimeString(Recording->Start()), recInfo->Title()) ;
+           title = cString::sprintf("  %s  %s  %s", *DateString(Recording->Start()), *TimeString(Recording->Start()), recInfo->Title()) ;
            menuPixmap->DrawText(cPoint(0, y), title, ColorFg, ColorBg, font, menuWidth);      
-
       }
       if (!Tab(i + 1))
           break;
@@ -400,19 +394,34 @@ bool cMetrixHDDisplayMenu::SetItemRecording(const cRecording *Recording, int Ind
       return true;
 }
 
-void cMetrixHDDisplayMenu::DrawPoster(const cRecording *Recording) {
-   const cRecordingInfo *info = Recording->Info();
-   if (info) {
-      const cEvent *event = info->GetEvent();
-      static cPlugin *pTVScraper = cPluginManager::GetPlugin("tvscraper");
-      if (pTVScraper && event) {
-          poster.event = event;
-          poster.isRecording = true;
-          if (pTVScraper->Service("TVScraperGetPoster", &poster)) {
-                int posterHeightOrig = poster.media.height;
-                int posterWidthOrig = poster.media.width;
-                cString path = poster.media.path.c_str();
-                dsyslog("SkinMetrixHD : Poster Found %s ", *path);          
+cString cMetrixHDDisplayMenu::DrawPoster(const cRecording *Recording) {
+    iconmenuPixmap->Fill(clrIconTransparent);
+    int imagemargin = osdWidth / 35;
+    double imageHeight = sitebarwidth - imagemargin * 2;
+    cString path = "";
+    const cRecordingInfo *info = Recording->Info();
+    if (info) {
+       const cEvent *event = info->GetEvent();
+       static cPlugin *pTVScraper = cPluginManager::GetPlugin("tvscraper");
+       if (pTVScraper && event) {
+           mediainfo.event = event;
+           mediainfo.isRecording = true;
+           if (pTVScraper->Service("TVScraperGetFullInformation", &mediainfo)) {
+                double posterHeightOrig = mediainfo.posters[0].height;
+                double posterWidthOrig = mediainfo.posters[0].width;
+                double factor = imageHeight / posterWidthOrig;
+                path = mediainfo.posters[0].path.c_str();
+                if(*path != NULL) {
+                    if(imgLoader.LoadPoster(*path, int(posterWidthOrig * factor), int(posterHeightOrig * factor)) ) {
+                       iconmenuPixmap->DrawImage( cPoint(imagemargin , imagemargin), imgLoader.GetImage() );
+                    }
+                } else {
+                    iconmenuPixmap->Fill(clrIconTransparent);
+                } 
+                //dsyslog("SkinMetrixHD : Descriptiom Found %s ", mediainfo.description.c_str());
+                return path;
+          } else {
+          return NULL;
           }
       }
    }
@@ -522,7 +531,7 @@ void cMetrixHDDisplayMenu::CreateSmallSiteBar(void) {
     bool small = true;
     if (siteBarPixmap)
         osd->DestroyPixmap(siteBarPixmap);
-    siteBarPixmap = osd->CreatePixmap(1, cRect(marginleft, margintop , imageheight, imageheight + marginleft));
+    siteBarPixmap = osd->CreatePixmap(1, cRect(marginleft, margintop , osdWidth / 100 * 21, osdWidth / 100 * 21 + marginleft));
     siteBarPixmap->Fill(Theme.Color(clrMenuBg));
     TimeBareLeftCreate(small);
 }

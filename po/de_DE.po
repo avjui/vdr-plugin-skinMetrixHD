@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-skinflat 0.0.1\n"
 "Report-Msgid-Bugs-To: <see README>\n"
-"POT-Creation-Date: 2013-08-26 00:14+0200\n"
+"POT-Creation-Date: 2013-08-26 21:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,11 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Path of recording"
-msgstr ""
-
-msgid "TVScraper Plugin found"
-msgstr "TVScraper Plugin gefunden"
-
 msgid "Volume"
 msgstr "Lautstärke"
+
+#~ msgid "TVScraper Plugin found"
+#~ msgstr "TVScraper Plugin gefunden"

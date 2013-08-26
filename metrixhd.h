@@ -72,6 +72,7 @@ THEME_CLR(Theme, clrMenuRecBg,              0xBB101010);
 THEME_CLR(Theme, clrMenuRecFontTitle,       0xFFEEEEEE);
 THEME_CLR(Theme, clrMenuRecFontInfo,        0xFFEEEEEE);
 THEME_CLR(Theme, clrMenuRecContentBg,       0xFF63EA42);
+THEME_CLR(Theme, clrIconTransparent,        0x00FFFFFF);
 // Menu Text (Multiline)
 THEME_CLR(Theme, clrMenuTextBg,             0xBB101010);
 THEME_CLR(Theme, clrMenuTextFont,           0xFFEEEEEE);

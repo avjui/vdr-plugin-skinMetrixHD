@@ -18,6 +18,7 @@ public:
     ~cImageLoader();
     cImage GetImage();
     bool LoadLogo(const char *logo, int width, int height);
+    bool LoadPoster(const char *logo, int width, int height);
     bool LoadIcon(const char *cIcon, int size);
     bool LoadIcon(const char *cIcon, int width, int height, bool preserveAspect = true);
     bool LoadEPGImage(int eventID);
@@ -42,5 +43,6 @@ private:
     Color Argb2Color(tColor col);
     void toLowerCase(std::string &str);
     bool LoadImage(cString FileName, cString Path, cString Extension);
-	bool FirstImageInFolder(cString Path, cString Extension, cString *recImage);
+    bool LoadPosterImage(cString FileName);
+    bool FirstImageInFolder(cString Path, cString Extension, cString *recImage);
 };
